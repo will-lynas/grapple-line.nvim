@@ -4,6 +4,10 @@ M.settings = {
 	number_of_files = 4,
 }
 
+function M.setup(user_settings)
+	M.settings = vim.tbl_deep_extend("force", M.settings, user_settings)
+end
+
 function M.status()
 	local grapple = require("grapple")
 	local result = {}
