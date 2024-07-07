@@ -31,3 +31,13 @@ _Here `grapple-line.nvim` is used on the right of the tabline._
 	},
 }
 ```
+
+## Usage
+
+```lua
+require("lualine").setup({
+	tabline = {
+		lualine_z = { require("grapple-line").status },
+	},
+})
+```
