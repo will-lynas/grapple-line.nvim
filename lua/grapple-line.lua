@@ -1,11 +1,15 @@
 local M = {}
 
+M.settings = {
+	number_of_files = 4,
+}
+
 function M.status()
 	local grapple = require("grapple")
 	local result = {}
 	local current_index = grapple.name_or_index()
 
-	for i = 1, 4 do
+	for i = 1, M.settings.number_of_files do
 		if not grapple.exists({ index = i }) then
 			break
 		end
