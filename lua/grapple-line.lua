@@ -25,27 +25,74 @@ local function get_grapple_files()
 	return files
 end
 
-local function format_paths(files)
-	for _, file in ipairs(files) do
-		file.path = file.path:match("^.+/(.+)$")
-	end
-	return files
-end
-
 local function make_statusline(files)
 	local result = {}
 	for _, file in ipairs(files) do
 		if file.current then
-			table.insert(result, "%#lualine_a_normal# " .. file.path .. " %*")
+			table.insert(result, "%#lualine_a_normal# " .. file.name .. " %*")
 		else
-			table.insert(result, "%#lualine_a_inactive# " .. file.path .. " %*")
+			table.insert(result, "%#lualine_a_inactive# " .. file.name .. " %*")
 		end
 	end
 	return table.concat(result)
 end
 
+local function get_counts(files)
+	local counts = {}
+	for _, file in ipairs(files) do
+		counts[file.name] = (counts[file.name] or 0) + 1
+	end
+	return counts
+end
+
+local function update_counts(files)
+	local counts = get_counts(files)
+	for _, file in ipairs(files) do
+		file.count = counts[file.name]
+	end
+end
+
+local function get_name(path, depth)
+	depth = depth or 1
+	local parts = {}
+	for part in string.gmatch(path, "[^/]+") do
+		table.insert(parts, part)
+	end
+
+	local resultParts = {}
+	for i = #parts - depth + 1, #parts do
+		table.insert(resultParts, parts[i])
+	end
+
+	return table.concat(resultParts, "/")
+end
+
+local function generate_initial_names(files)
+	for _, file in ipairs(files) do
+		file.name = get_name(file.path)
+	end
+end
+
+local function make_names(files)
+	generate_initial_names(files)
+	local duplicates = true
+	local depth = 2
+	while duplicates do
+		duplicates = false
+		update_counts(files)
+		for _, file in ipairs(files) do
+			if file.count > 1 then
+				duplicates = true
+				file.name = get_name(file.path, depth)
+			end
+		end
+		depth = depth + 1
+	end
+end
+
 function M.status()
-	local files = format_paths(get_grapple_files())
+	local files = get_grapple_files()
+	make_names(files)
 	return make_statusline(files)
 end
 
