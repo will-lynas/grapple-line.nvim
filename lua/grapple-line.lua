@@ -27,9 +27,10 @@ end
 
 local function make_statusline(files)
 	local result = {}
+	local match_color = M.settings.active_highlight or "lualine_a_normal"
 	for _, file in ipairs(files) do
 		if file.current then
-			table.insert(result, "%#lualine_a_normal# " .. file.name .. " %*")
+			table.insert(result, "%#" .. match_color .. "# " .. file.name .. " %*")
 		else
 			table.insert(result, "%#lualine_a_inactive# " .. file.name .. " %*")
 		end

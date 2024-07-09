@@ -27,6 +27,7 @@ _Here `grapple-line.nvim` is used on the right of the tabline._
 		"cbochs/grapple.nvim",
 	},
 	opts = {
+		active_highlight = "lualine_a_normal",
 		number_of_files = 4,
 	},
 }
