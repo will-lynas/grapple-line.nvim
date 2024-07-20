@@ -32,7 +32,7 @@ end
 local function make_statusline(files)
 	local result = {}
 	for _, file in ipairs(files) do
-		local color = file.current and M.setting.colors.active or M.settings.colors.inactive
+		local color = file.current and M.settings.colors.active or M.settings.colors.inactive
 		table.insert(result, "%#" .. color .. "# " .. file.name .. " %*")
 	end
 	return table.concat(result)
