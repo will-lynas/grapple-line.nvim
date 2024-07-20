@@ -2,6 +2,10 @@ local M = {}
 
 M.settings = {
 	number_of_files = 4,
+	colors = {
+		active = "lualine_a_normal",
+		inactive = "lualine_a_inactive",
+	},
 }
 
 function M.setup(user_settings)
@@ -27,12 +31,11 @@ end
 
 local function make_statusline(files)
 	local result = {}
-	local match_color = M.settings.active_highlight or "lualine_a_normal"
 	for _, file in ipairs(files) do
 		if file.current then
-			table.insert(result, "%#" .. match_color .. "# " .. file.name .. " %*")
+			table.insert(result, "%#" .. M.settings.colors.active .. "# " .. file.name .. " %*")
 		else
-			table.insert(result, "%#lualine_a_inactive# " .. file.name .. " %*")
+			table.insert(result, "%#" .. M.settings.colors.inactive .. "# " .. file.name .. " %*")
 		end
 	end
 	return table.concat(result)
