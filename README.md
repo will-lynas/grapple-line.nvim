@@ -27,11 +27,11 @@ _Here `grapple-line.nvim` is used on the right of the tabline._
 		"cbochs/grapple.nvim",
 	},
 	opts = {
-	    number_of_files = 4,
-	    colors = {
-            active = "lualine_a_normal",
-            inactive = "lualine_a_inactive",
-        },
+		number_of_files = 4,
+		colors = {
+			active = "lualine_a_normal",
+			inactive = "lualine_a_inactive",
+		},
 	},
 }
 ```
