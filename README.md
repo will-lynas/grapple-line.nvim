@@ -12,6 +12,7 @@ _Here `grapple-line.nvim` is used on the right of the tabline._
 ```lua
 {
 	"will-lynas/grapple-line.nvim",
+	version = "1.x",
 	dependencies = {
 		"cbochs/grapple.nvim",
 	},
@@ -26,6 +27,7 @@ _Here `grapple-line.nvim` is used on the right of the tabline._
 	dependencies = {
 		"cbochs/grapple.nvim",
 	},
+	version = "1.x",
 	opts = {
 		number_of_files = 4,
 		colors = {
