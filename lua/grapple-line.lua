@@ -78,8 +78,7 @@ local function generate_initial_names(files)
 	end
 end
 
-local function make_names(files)
-	generate_initial_names(files)
+local function resolve_duplicates(files)
 	local duplicates = true
 	local depth = 2
 	while duplicates do
@@ -93,6 +92,11 @@ local function make_names(files)
 		end
 		depth = depth + 1
 	end
+end
+
+local function make_names(files)
+	generate_initial_names(files)
+	resolve_duplicates(files)
 end
 
 function M.status()
