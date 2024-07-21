@@ -38,6 +38,8 @@ _Here `grapple-line.nvim` is used on the right of the tabline._
 		-- "unique_filename" shows the filename and parent directories if needed
 		-- "filename" shows the filename only
 		mode = "unique_filename",
+		-- If a custom tag name is set, use that instead of the filename
+		show_names = false,
 	},
 }
 ```
