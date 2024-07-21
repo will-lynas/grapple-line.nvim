@@ -27,8 +27,9 @@ local function get_grapple_files()
 		if not grapple.exists({ index = i }) then
 			break
 		end
-		local path = grapple.find({ index = i }).path
-		local file = { path = path, current = path == current_path }
+		local tag = grapple.find({ index = i })
+		local path = tag.path
+		local file = { path = path, current = path == current_path, tag_name = tag.name }
 		table.insert(files, file)
 	end
 
@@ -39,7 +40,15 @@ local function make_statusline(files)
 	local result = {}
 	for _, file in ipairs(files) do
 		local color = file.current and M.settings.colors.active or M.settings.colors.inactive
-		table.insert(result, "%#" .. color .. "# " .. file.name .. " %*")
+
+		local text = ""
+		if file.tag_name and M.settings.show_names then
+			text = "[" .. file.tag_name .. "]"
+		else
+			text = file.name
+		end
+
+		table.insert(result, "%#" .. color .. "# " .. text .. " %*")
 	end
 	return table.concat(result)
 end
