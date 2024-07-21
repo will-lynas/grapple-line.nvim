@@ -6,6 +6,10 @@ M.settings = {
 		active = "lualine_a_normal",
 		inactive = "lualine_a_inactive",
 	},
+	-- Accepted values:
+	-- "unique_filename" shows the filename and parent directories if needed
+	-- "filename" shows the filename only
+	mode = "unique_filename",
 }
 
 function M.setup(user_settings)
@@ -74,8 +78,7 @@ local function generate_initial_names(files)
 	end
 end
 
-local function make_names(files)
-	generate_initial_names(files)
+local function resolve_duplicates(files)
 	local duplicates = true
 	local depth = 2
 	while duplicates do
@@ -88,6 +91,13 @@ local function make_names(files)
 			end
 		end
 		depth = depth + 1
+	end
+end
+
+local function make_names(files)
+	generate_initial_names(files)
+	if M.settings.mode == "unique_filename" then
+		resolve_duplicates(files)
 	end
 end
 
