@@ -19,14 +19,14 @@ end
 local function get_grapple_files()
 	local grapple = require("grapple")
 	local files = {}
-	local current_index = grapple.name_or_index()
+	local current_path = vim.api.nvim_buf_get_name(0)
 
 	for i = 1, M.settings.number_of_files do
 		if not grapple.exists({ index = i }) then
 			break
 		end
 		local path = grapple.find({ index = i }).path
-		local file = { path = path, current = i == current_index }
+		local file = { path = path, current = path == current_path }
 		table.insert(files, file)
 	end
 
