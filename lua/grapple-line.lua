@@ -6,6 +6,10 @@ M.settings = {
 		active = "lualine_a_normal",
 		inactive = "lualine_a_inactive",
 	},
+	-- Accepted values:
+	-- "unique_filename" shows the filename and parent directories if needed
+	-- "filename" shows the filename only
+	mode = "unique_filename",
 }
 
 function M.setup(user_settings)
