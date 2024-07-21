@@ -21,6 +21,8 @@ _Here `grapple-line.nvim` is used on the right of the tabline._
 
 ### Full
 
+The default values are shown in the `opts` table.
+
 ```lua
 {
 	"will-lynas/grapple-line.nvim",
