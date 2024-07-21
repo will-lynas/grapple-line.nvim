@@ -56,8 +56,9 @@ end
 local function get_counts(files)
 	local counts = {}
 	for _, file in ipairs(files) do
+		counts[file.name] = counts[file.name] or 0
 		if not file.tag_name then
-			counts[file.name] = (counts[file.name] or 0) + 1
+			counts[file.name] = counts[file.name] + 1
 		end
 	end
 	return counts
