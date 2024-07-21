@@ -96,7 +96,9 @@ end
 
 local function make_names(files)
 	generate_initial_names(files)
-	resolve_duplicates(files)
+	if M.settings.mode == "unique_filename" then
+		resolve_duplicates(files)
+	end
 end
 
 function M.status()
