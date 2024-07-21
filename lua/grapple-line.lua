@@ -10,7 +10,7 @@ M.settings = {
 	-- "unique_filename" shows the filename and parent directories if needed
 	-- "filename" shows the filename only
 	mode = "unique_filename",
-	-- If a custom tag name is set, use that instead of the filename
+	-- If a tag name is set, use that instead of the filename
 	show_names = false,
 }
 
