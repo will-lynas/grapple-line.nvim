@@ -21,6 +21,8 @@ _Here `grapple-line.nvim` is used on the right of the tabline._
 
 ### Full
 
+The default values are shown in the `opts` table.
+
 ```lua
 {
 	"will-lynas/grapple-line.nvim",
@@ -38,6 +40,8 @@ _Here `grapple-line.nvim` is used on the right of the tabline._
 		-- "unique_filename" shows the filename and parent directories if needed
 		-- "filename" shows the filename only
 		mode = "unique_filename",
+		-- If a tag name is set, use that instead of the filename
+		show_names = false,
 	},
 }
 ```

@@ -10,6 +10,8 @@ M.settings = {
 	-- "unique_filename" shows the filename and parent directories if needed
 	-- "filename" shows the filename only
 	mode = "unique_filename",
+	-- If a tag name is set, use that instead of the filename
+	show_names = false,
 }
 
 function M.setup(user_settings)
@@ -25,8 +27,9 @@ local function get_grapple_files()
 		if not grapple.exists({ index = i }) then
 			break
 		end
-		local path = grapple.find({ index = i }).path
-		local file = { path = path, current = path == current_path }
+		local tag = grapple.find({ index = i })
+		local path = tag.path
+		local file = { path = path, current = path == current_path, tag_name = tag.name }
 		table.insert(files, file)
 	end
 
@@ -37,7 +40,15 @@ local function make_statusline(files)
 	local result = {}
 	for _, file in ipairs(files) do
 		local color = file.current and M.settings.colors.active or M.settings.colors.inactive
-		table.insert(result, "%#" .. color .. "# " .. file.name .. " %*")
+
+		local text = ""
+		if file.tag_name and M.settings.show_names then
+			text = "[" .. file.tag_name .. "]"
+		else
+			text = file.name
+		end
+
+		table.insert(result, "%#" .. color .. "# " .. text .. " %*")
 	end
 	return table.concat(result)
 end
@@ -45,7 +56,10 @@ end
 local function get_counts(files)
 	local counts = {}
 	for _, file in ipairs(files) do
-		counts[file.name] = (counts[file.name] or 0) + 1
+		counts[file.name] = counts[file.name] or 0
+		if not file.tag_name then
+			counts[file.name] = counts[file.name] + 1
+		end
 	end
 	return counts
 end
