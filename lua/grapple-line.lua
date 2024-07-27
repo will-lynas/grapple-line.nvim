@@ -12,6 +12,10 @@ M.settings = {
 	mode = "unique_filename",
 	-- If a tag name is set, use that instead of the filename
 	show_names = false,
+	-- Accepted values:
+	-- "none" - overflowing files are ignored
+	-- "ellipsis" - if there are overflowing files an ellipsis will be shown
+	overflow = "none",
 }
 
 function M.setup(user_settings)
