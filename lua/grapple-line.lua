@@ -12,6 +12,10 @@ M.settings = {
 	mode = "unique_filename",
 	-- If a tag name is set, use that instead of the filename
 	show_names = false,
+	-- Accepted values:
+	-- "none" - overflowing files are ignored
+	-- "ellipsis" - if there are overflowing files an ellipsis will be shown
+	overflow = "none",
 }
 
 function M.setup(user_settings)
@@ -28,12 +32,41 @@ local function get_grapple_files()
 			break
 		end
 		local tag = grapple.find({ index = i })
+		assert(tag ~= nil)
 		local path = tag.path
 		local file = { path = path, current = path == current_path, tag_name = tag.name }
 		table.insert(files, file)
 	end
 
 	return files
+end
+
+local function make_ellipsis()
+	local grapple = require("grapple")
+	local current_path = vim.api.nvim_buf_get_name(0)
+	local ellipsis = "..."
+	local found_file = false
+	local found_current_file = false
+
+	for i = M.settings.number_of_files + 1, 9999 do
+		if not grapple.exists({ index = i }) then
+			break
+		end
+		found_file = true
+		local tag = grapple.find({ index = i })
+		assert(tag ~= nil)
+		if tag.path == current_path then
+			found_current_file = true
+			break
+		end
+	end
+
+	if not found_file then
+		return ""
+	end
+
+	local color = found_current_file and M.settings.colors.active or M.settings.colors.inactive
+	return "%#" .. color .. "# " .. ellipsis .. " %*"
 end
 
 local function make_statusline(files)
@@ -49,6 +82,9 @@ local function make_statusline(files)
 		end
 
 		table.insert(result, "%#" .. color .. "# " .. text .. " %*")
+	end
+	if M.settings.overflow == "ellipsis" then
+		table.insert(result, make_ellipsis())
 	end
 	return table.concat(result)
 end
