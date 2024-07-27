@@ -28,6 +28,7 @@ local function get_grapple_files()
 			break
 		end
 		local tag = grapple.find({ index = i })
+		assert(tag ~= nil)
 		local path = tag.path
 		local file = { path = path, current = path == current_path, tag_name = tag.name }
 		table.insert(files, file)
