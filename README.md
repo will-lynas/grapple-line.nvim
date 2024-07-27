@@ -45,7 +45,7 @@ The default values are shown in the `opts` table.
 		-- Accepted values:
 		-- "none" - overflowing files are ignored
 		-- "ellipsis" - if there are overflowing files an ellipsis will be shown
-		overflow = "ellipsis",
+		overflow = "none",
 	},
 }
 ```
