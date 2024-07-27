@@ -41,6 +41,34 @@ local function get_grapple_files()
 	return files
 end
 
+local function make_ellipsis()
+	local grapple = require("grapple")
+	local current_path = vim.api.nvim_buf_get_name(0)
+	local ellipsis = "..."
+	local found_file = false
+	local found_current_file = false
+
+	for i = M.settings.number_of_files + 1, 9999 do
+		if not grapple.exists({ index = i }) then
+			break
+		end
+		found_file = true
+		local tag = grapple.find({ index = i })
+		assert(tag ~= nil)
+		if tag.path == current_path then
+			found_current_file = true
+			break
+		end
+	end
+
+	if not found_file then
+		return ""
+	end
+
+	local color = found_current_file and M.settings.colors.active or M.settings.colors.inactive
+	return "%#" .. color .. "# " .. ellipsis .. " %*"
+end
+
 local function make_statusline(files)
 	local result = {}
 	for _, file in ipairs(files) do
@@ -54,6 +82,9 @@ local function make_statusline(files)
 		end
 
 		table.insert(result, "%#" .. color .. "# " .. text .. " %*")
+	end
+	if M.settings.overflow == "ellipsis" then
+		table.insert(result, make_ellipsis())
 	end
 	return table.concat(result)
 end
