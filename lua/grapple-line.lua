@@ -1,46 +1,81 @@
 local M = {}
 
+---@class grapple-line.settings
 M.settings = {
+	---The number of files to display
+	---@type integer
 	number_of_files = 4,
+
+	---@class grapple-line.colors
+	---@field active string
+	---@field inactive string
+
+	---The highlights to use in the statusline
+	---@type grapple-line.colors
 	colors = {
 		active = "lualine_a_normal",
 		inactive = "lualine_a_inactive",
 	},
-	-- Accepted values:
-	-- "unique_filename" shows the filename and parent directories if needed
-	-- "filename" shows the filename only
+
+	---@alias grapple-line.mode
+	---| "unique_filename" Show the filename and parent directories if needed
+	---| "filename" Show the filename only
+
+	---The mode used for displaying tags
+	---@type grapple-line.mode
 	mode = "unique_filename",
-	-- If a tag name is set, use that instead of the filename
+
+	---Whether to use tag names when available
+	---@type boolean
 	show_names = false,
-	-- Accepted values:
-	-- "none" - overflowing files are ignored
-	-- "ellipsis" - if there are overflowing files an ellipsis will be shown
+
+	---@alias grapple-line.overflow
+	---| "none" Overflowing files are ignored
+	---| "ellipsis" If there are overflowing files an ellipsis will be shown
+
+	---How to display overflowing files
+	---@type grapple-line.overflow
 	overflow = "none",
 }
 
+---@param user_settings grapple-line.settings
 function M.setup(user_settings)
 	M.settings = vim.tbl_deep_extend("force", M.settings, user_settings)
 end
 
+---@class grapple-line.file
+---@field path string
+---@field current boolean
+---@field tag_name string
+---@field name string?
+---@field count integer?
+
+---@return grapple-line.file[]
 local function get_grapple_files()
 	local grapple = require("grapple")
+
+	---@type grapple-line.file[]
 	local files = {}
+
 	local current_path = vim.api.nvim_buf_get_name(0)
 
 	for i = 1, M.settings.number_of_files do
 		if not grapple.exists({ index = i }) then
 			break
 		end
-		local tag = grapple.find({ index = i })
-		assert(tag ~= nil)
+		local tag = grapple.find({ index = i }) --[[@as grapple.tag]]
 		local path = tag.path
+
+		---@type grapple-line.file
 		local file = { path = path, current = path == current_path, tag_name = tag.name }
+
 		table.insert(files, file)
 	end
 
 	return files
 end
 
+---@return string
 local function make_ellipsis()
 	local grapple = require("grapple")
 	local current_path = vim.api.nvim_buf_get_name(0)
@@ -53,8 +88,7 @@ local function make_ellipsis()
 			break
 		end
 		found_file = true
-		local tag = grapple.find({ index = i })
-		assert(tag ~= nil)
+		local tag = grapple.find({ index = i }) --[[@as grapple.tag]]
 		if tag.path == current_path then
 			found_current_file = true
 			break
@@ -69,6 +103,8 @@ local function make_ellipsis()
 	return "%#" .. color .. "# " .. ellipsis .. " %*"
 end
 
+---@param files grapple-line.file[]
+---@return string
 local function make_statusline(files)
 	local result = {}
 	for _, file in ipairs(files) do
@@ -89,6 +125,8 @@ local function make_statusline(files)
 	return table.concat(result)
 end
 
+---@param files grapple-line.file[]
+---@return table<string, integer>
 local function get_counts(files)
 	local counts = {}
 	for _, file in ipairs(files) do
@@ -100,6 +138,7 @@ local function get_counts(files)
 	return counts
 end
 
+---@param files grapple-line.file[]
 local function update_counts(files)
 	local counts = get_counts(files)
 	for _, file in ipairs(files) do
@@ -107,6 +146,9 @@ local function update_counts(files)
 	end
 end
 
+---@param path string
+---@param depth integer?
+---@return string
 local function get_name(path, depth)
 	depth = depth or 1
 	local parts = {}
@@ -122,12 +164,14 @@ local function get_name(path, depth)
 	return table.concat(resultParts, "/")
 end
 
+---@param files grapple-line.file[]
 local function generate_initial_names(files)
 	for _, file in ipairs(files) do
 		file.name = get_name(file.path)
 	end
 end
 
+---@param files grapple-line.file[]
 local function resolve_duplicates(files)
 	local duplicates = true
 	local depth = 2
@@ -144,6 +188,7 @@ local function resolve_duplicates(files)
 	end
 end
 
+---@param files grapple-line.file[]
 local function make_names(files)
 	generate_initial_names(files)
 	if M.settings.mode == "unique_filename" then
@@ -151,6 +196,8 @@ local function make_names(files)
 	end
 end
 
+---Get the status string
+---@return string
 function M.status()
 	local files = get_grapple_files()
 	make_names(files)
