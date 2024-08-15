@@ -36,6 +36,10 @@ M.settings = {
 	---How to display overflowing files
 	---@type grapple-line.overflow
 	overflow = "none",
+
+	---Show parent dir for the following files
+	---@type string[]
+	show_parent_for_files = { "mod.rs", "init.lua", "Cargo.toml" },
 }
 
 ---@param user_settings grapple-line.settings
@@ -156,7 +160,13 @@ local function get_name(path, depth)
 		table.insert(parts, part)
 	end
 
+	local filename = parts[#parts]
+	local show_parent = vim.tbl_contains(M.settings.show_parent_for_files, filename)
+
 	local resultParts = {}
+	if show_parent then
+		table.insert(resultParts, parts[#parts - 1])
+	end
 	for i = #parts - depth + 1, #parts do
 		table.insert(resultParts, parts[i])
 	end
