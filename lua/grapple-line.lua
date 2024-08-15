@@ -164,10 +164,13 @@ local function get_name(path, depth)
 	local show_parent = vim.tbl_contains(M.settings.show_parent_for_files, filename)
 
 	local resultParts = {}
+	local start_index = #parts - depth + 1
 	if show_parent then
-		table.insert(resultParts, parts[#parts - 1])
+		start_index = start_index - 1
 	end
-	for i = #parts - depth + 1, #parts do
+
+	start_index = math.max(1, start_index)
+	for i = start_index, #parts do
 		table.insert(resultParts, parts[i])
 	end
 
