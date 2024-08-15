@@ -46,6 +46,10 @@ The default values are shown in the `opts` table.
 		-- "none" - overflowing files are ignored
 		-- "ellipsis" - if there are overflowing files an ellipsis will be shown
 		overflow = "none",
+		-- Specify filenames for which the parent directory should always be shown
+		-- If you want "mod.rs" and "init.lua" to include their parent directory in the status line,
+		-- add them to this list. This helps disambiguate common filenames.
+		show_parent_for_files = {},
 	},
 }
 ```
