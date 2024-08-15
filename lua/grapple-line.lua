@@ -39,7 +39,7 @@ M.settings = {
 
 	---Show parent dir for the following files
 	---@type string[]
-	show_parent_for_files = { "mod.rs", "init.lua", "Cargo.toml" },
+	show_parent_for_files = {},
 }
 
 ---@param user_settings grapple-line.settings
