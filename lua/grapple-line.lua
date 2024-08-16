@@ -160,17 +160,8 @@ local function get_name(path, depth)
 		table.insert(parts, part)
 	end
 
-	local filename = parts[#parts]
-	local show_parent = vim.tbl_contains(M.settings.show_parent_for_files, filename)
-
 	local resultParts = {}
-	local start_index = #parts - depth + 1
-	if show_parent then
-		start_index = start_index - 1
-	end
-
-	start_index = math.max(1, start_index)
-	for i = start_index, #parts do
+	for i = #parts - depth + 1, #parts do
 		table.insert(resultParts, parts[i])
 	end
 
@@ -204,6 +195,13 @@ end
 ---@param files grapple-line.file[]
 local function make_names(files)
 	generate_initial_names(files)
+
+	for _, file in ipairs(files) do
+		if vim.tbl_contains(M.settings.show_parent_for_files, file.name) then
+			file.name = get_name(file.path, 2)
+		end
+	end
+
 	if M.settings.mode == "unique_filename" then
 		resolve_duplicates(files)
 	end
