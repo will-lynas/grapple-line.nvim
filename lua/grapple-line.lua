@@ -36,6 +36,10 @@ M.settings = {
 	---How to display overflowing files
 	---@type grapple-line.overflow
 	overflow = "none",
+
+	---Files for which the parent directory should always be shown
+	---@type string[]
+	always_show_parent = {},
 }
 
 ---@param user_settings grapple-line.settings
@@ -189,8 +193,19 @@ local function resolve_duplicates(files)
 end
 
 ---@param files grapple-line.file[]
+local function show_parents(files)
+	for _, file in ipairs(files) do
+		if vim.tbl_contains(M.settings.always_show_parent, file.name) then
+			file.name = get_name(file.path, 2)
+		end
+	end
+end
+
+---@param files grapple-line.file[]
 local function make_names(files)
 	generate_initial_names(files)
+	show_parents(files)
+
 	if M.settings.mode == "unique_filename" then
 		resolve_duplicates(files)
 	end

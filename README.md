@@ -46,6 +46,8 @@ The default values are shown in the `opts` table.
 		-- "none" - overflowing files are ignored
 		-- "ellipsis" - if there are overflowing files an ellipsis will be shown
 		overflow = "none",
+		-- Files for which the parent directory should always be shown
+		always_show_parent = {},
 	},
 }
 ```
