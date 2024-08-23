@@ -57,7 +57,7 @@ The default values are shown in the `opts` table.
 ```lua
 require("lualine").setup({
 	tabline = {
-		lualine_z = { require("grapple-line").status },
+		lualine_z = { require("grapple-line").lualine },
 	},
 })
 ```

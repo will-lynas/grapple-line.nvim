@@ -211,9 +211,16 @@ local function make_names(files)
 	end
 end
 
----Get the status string
+---@deprecated
+---See M.lualine
 ---@return string
 function M.status()
+	return M.lualine()
+end
+
+---Get the lualine status string
+---@return string
+function M.lualine()
 	local files = get_grapple_files()
 	make_names(files)
 	return make_statusline(files)
